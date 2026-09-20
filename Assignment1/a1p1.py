@@ -4,7 +4,7 @@
 #
 # CMPUT 331 Student Submission License
 # Version 1.0
-# Copyright 2026 <<Insert your name here>>
+# Copyright 2026 Chitkarsh Rathi
 #
 # Redistribution is forbidden in all circumstances. Use of this software
 # without explicit authorization from the author is prohibited.
@@ -33,7 +33,7 @@
 """
 CMPUT 331 Assignment 1 Student Solution
 September 2026
-Author: <Your name here>
+Author: Chitkarsh Rathi
 """
 
 
@@ -42,25 +42,51 @@ from sys import flags
 LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 
 def get_map(letters=LETTERS):
+
     char_to_index = {char: index for index, char in enumerate(letters)}
     index_to_char = {index: char for index, char in enumerate(letters)}
+
     return char_to_index, index_to_char
 
 
 def encrypt(message: str, key: str):
     message = message.upper()
-    raise NotImplementedError()
 
+    key = key.upper()
+    translated = ''
+    char_to_index, index_to_char = get_map()
+
+    for i in message:
+        if i in char_to_index:
+            shift = char_to_index[key[0]]
+            index = (char_to_index[i] + shift) % len(LETTERS)
+            translated += index_to_char[index]
+        else:
+            translated += i
+
+    return translated
 
 def decrypt(message: str, key: str):
-    raise NotImplementedError()
+    message = message.upper()
+    key = key.upper()
+    translated = ''
+    char_to_index, index_to_char = get_map()
+
+    for i in message:
+        if i in char_to_index:
+            shift = char_to_index[key[0]]
+            index = (char_to_index[i] - shift) % len(LETTERS)
+            translated += index_to_char[index]
+        else:
+            translated += i
+
+    return translated
 
 
 def test():
     global SHIFTDICT, LETTERDICT 
     SHIFTDICT, LETTERDICT = get_map()
     assert decrypt(encrypt("FOO", "G"), "G") == "FOO"
-
 
 if __name__ == "__main__" and not flags.interactive:
     test()
