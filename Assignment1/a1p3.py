@@ -62,6 +62,7 @@ def crack_caesar(ciphertext, val_words):
 
         output.append((decrypted_text, ch, count))
 
+    # sorts output by highest count, then uses a tie-breaker by alphabets 
     output.sort(key=lambda x: (-x[2], x[0]))
     return output[0][0], output[0][1]
 
