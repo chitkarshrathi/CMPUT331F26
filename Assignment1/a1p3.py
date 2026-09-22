@@ -44,12 +44,44 @@ LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 
 
 def crack_caesar(ciphertext, val_words):
-    
-    raise NotImplementedError()
+    output = []
+
+    for ch in LETTERS:
+        decrypted_text = decrypt(ciphertext, ch)
+        count  = 0
+
+        for k in decrypted_text.split():
+            cleaned_word = ''
+
+            for c in k.upper():
+                if c in LETTERS:
+                    cleaned_word += c
+
+            if cleaned_word in val_words:
+                count += 1
+
+        output.append((decrypted_text, ch, count))
+
+    output.sort(key=lambda x: (-x[2], x[0]))
+    return output[0][0], output[0][1]
 
 
 def form_dictionary(text_address='carroll-alice.txt'):
-    raise NotImplementedError()
+    val_words = set()
+
+    with open(text_address, 'r') as f:
+        for line in f:
+            for word in line.split():
+                cleaned_word = ''
+
+                for c in word.upper():
+                    if c in LETTERS:
+                        cleaned_word += c
+
+                if cleaned_word:
+                    val_words.add(cleaned_word)
+
+    return val_words
 
 
 
