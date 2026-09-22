@@ -82,9 +82,10 @@ def decrypt(message: str, key: str):
         if i in char_to_index:
             shift = char_to_index[current_key]
             index = (char_to_index[i] - shift) % len(LETTERS)
-            translated += index_to_char[index]
 
-            current_key = translated
+            decrypted_char = index_to_char[index]
+            translated += decrypted_char
+            current_key = decrypted_char
         else:
             translated += i
 
