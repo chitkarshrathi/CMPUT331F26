@@ -4,17 +4,17 @@ Note:
 2. Any other change in the template might result in a potential mark deduction.
 
 Problem 1 implementation
-  Answer: ___ (Number)
-  Explanation: ___ (10-20 words)
+  Answer: 25 (Number)
+  Explanation: As a 0 (zero) shift would've left the plaintext unencrypted, we exclude exactly one shift out of the possible 26 possible shifts. (10-20 words)
 
 Problem 2 implementation
-  Answer: ___ (Number)
-  Explanation: ___ (10-20 words)
+  Answer: 26 (Number)
+  Explanation: All 26 possible shifts used as an initial zero shift would've also altered the subsequent letters and would've created an encrypted text. (10-20 words)
 
 4b. Assume that an attacker knows which cipher you are using, but is unaware of your key(s). In this case, is the Problem 2 cipher stronger than the original Caesar cipher?
-  Answer: ___ (Yes/No)
-  Explanation: ___ (10-20 words)
+  Answer: No (Yes/No)
+  Explanation: Total possible shifts still sit at 26 vs 25, can be deciphered using brute force in a similar way and runtime in both cases.  (10-20 words)
 
 4c. The Caesar cipher has several weaknesses. Will encrypting the space character help address any of these weaknesses? Specify which weaknesses in your explanation. 
-  Answer: ___ (Yes/No)
-  Explanation: ___ (10-20 words)
+  Answer: Yes (Yes/No)
+  Explanation: If we hide word lengths by encrypting spaces it will make it significantly harder to match it against the dictionary. Shorter/easy to identify words will also be harder to crack. (10-20 words)
