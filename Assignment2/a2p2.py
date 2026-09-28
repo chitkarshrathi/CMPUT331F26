@@ -39,7 +39,13 @@ Author: <Your name here>
 from typing import List
 
 def encipherMessage(key: List[int], message: str) -> str:
-    raise NotImplementedError()
+
+    ciphertext = ''
+    cols = len(key)
+
+    for i in key:
+        ciphertext += message[i-1::cols]
+    return ciphertext
 
 def test():
     assert encipherMessage([2, 4, 1, 5, 3], "CIPHERS ARE FUN") == "IS HAUCREERNP F"
