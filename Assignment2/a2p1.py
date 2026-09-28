@@ -37,10 +37,40 @@ Author: <Your name here>
 """
 
 def encipherMessage(key: int, message: str) -> str:
-    raise NotImplementedError()
+    ciphertext = ''
+
+    for i in range(key):
+        ciphertext += message[i::key]
+    return ciphertext
 
 def decipherMessage(key: int, message: str) -> str:
-    raise NotImplementedError()
+    length  = len(message)
+
+    rows = length // key
+    if length % key != 0:
+        rows += 1
+
+    cols = []
+    idx = 0
+    space = (rows * key) - length
+
+    for i in range(key):
+        if i < key - space:
+            col_len = rows
+        else:
+            col_len = rows - 1
+
+        cols.append(message[idx:idx + col_len])
+        idx += col_len
+
+    plaintext = ''
+
+    for r in range(rows):
+        for c in cols:
+            if r < len(c):
+                plaintext += c[r]
+
+    return plaintext
 
 def test():
     assert encipherMessage(5, "CIPHERS ARE FUN") == "CREIS P FHAUERN"
