@@ -39,7 +39,36 @@ Author: <Your name here>
 from typing import List
 
 def decipherMessage(key: List[int], message: str) -> str:
-    raise NotImplementedError()
+    length  = len(message)
+    num_cols = len(key)
+
+    rows = length // num_cols
+    if length % num_cols != 0:
+        rows += 1
+
+    space = (rows * num_cols) - length
+
+    cols = [''] * num_cols
+    idx = 0
+
+    for i in key:
+        col_idx = i - 1
+
+        if col_idx < num_cols - space:
+            col_len = rows
+        else:
+            col_len = rows - 1
+
+        cols[col_idx] = message[idx:idx + col_len]
+        idx += col_len
+
+    plaintext = ''
+    for i in range(rows):
+        for c in cols:
+            if i < len(c):
+                plaintext += c[i]
+
+    return plaintext
 
 def test():
     assert decipherMessage([2, 4, 1, 5, 3], "IS HAUCREERNP F") == "CIPHERS ARE FUN"
