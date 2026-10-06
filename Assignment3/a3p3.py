@@ -39,7 +39,19 @@ from sys import flags
 
 
 def random_generator(a, b, c, m, r0, r1, n):
-    raise NotImplementedError
+    numbers = []
+
+    prev2 = r0
+    prev1 = r1
+
+    for i in range(n):
+        next_num = (a * prev1 + b * prev2 + c) % m
+        numbers.append(next_num)
+
+        prev2 = prev1
+        prev1 = next_num
+
+    return numbers
 
 
 def test():
