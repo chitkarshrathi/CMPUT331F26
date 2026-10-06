@@ -4,7 +4,7 @@
 #
 # CMPUT 331 Student Submission License
 # Version 1.0
-# Copyright <<Insert the date here>> Chitkarsh Rathi
+# Copyright 2026 Chitkarsh Rathi
 #
 # Redistribution is forbidden in all circumstances. Use of this software
 # without explicit authorization from the author is prohibited.
