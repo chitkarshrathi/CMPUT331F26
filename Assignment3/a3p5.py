@@ -4,7 +4,7 @@
 #
 # CMPUT 331 Student Submission License
 # Version 1.0
-# Copyright <<Insert the date here>> <<Insert your name here>>
+# Copyright <<Insert the date here>> Chitkarsh Rathi
 #
 # Redistribution is forbidden in all circumstances. Use of this software
 # without explicit authorization from the author is prohibited.
@@ -32,7 +32,7 @@
 
 """
 CMPUT 331 Assignment 3 Student Solution
-Author: <Your name here>
+Author: Chitkarsh Rathi
 """
 
 from sys import flags
@@ -40,8 +40,24 @@ from sys import flags
 
 def crack_rng(m, sequence):
     r2, r3, r4, r5, r6 = tuple(sequence)
-    pass
 
+    x1 = (r4 - r3) % m
+    x2 = (r5 - r4) % m
+
+    y1 = (r3 - r2) % m
+    y2 = (r4 - r3) % m
+
+    d1 = (r5 - r4) % m
+    d2 = (r6 - r5) % m
+
+    det = (x1 * y2 - y1 * x2) % m
+    inv_det = pow(det, m - 2, m)
+
+    a = (d1 * y2 - d2 * y1) * inv_det % m
+    b = (x1 * d2 - x2 * d1) * inv_det % m
+    c = (r4 - a * r3 - b * r2) % m
+
+    return [a, b, c]
 
 def test():
     assert crack_rng(17, [14, 13, 16, 3, 13]) == [3, 5, 9]
