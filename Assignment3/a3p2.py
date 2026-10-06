@@ -39,7 +39,29 @@ from sys import flags
 
 
 def affine_key_count(m):
-    raise NotImplementedError
+    if m < 2:
+        return 0
+
+    count = m
+    n = m 
+
+    if n % 2 == 0:
+        while n % 2 == 0:
+            n //= 2
+        count -= count // 2
+
+    p = 3
+    while p * p <= n:
+        if n % p == 0:
+            while n % p == 0:
+                n //= p
+            count -= count // p
+        p += 2
+
+    if n > 1:
+        count -= count // n
+
+    return (count * m) - 1
 
 
 def test():
