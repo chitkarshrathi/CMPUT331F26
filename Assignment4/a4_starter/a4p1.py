@@ -182,13 +182,16 @@ def processing():
     
     with open('ciphers.txt', 'r') as f:
         for line in f:
-            line = line.strip()
+            line = line.strip('\n')
             
             if line:
                 parts = line.split(';')
                 ciphertype = parts[0]
                 ciphertext = parts[1]
-                
+
+                if ciphertext.startswith(' '):
+                    ciphertext = ciphertext[1:]
+                    
                 plaintext = hack(ciphertype, ciphertext)
                 
                 if plaintext:
