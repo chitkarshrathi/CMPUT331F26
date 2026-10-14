@@ -80,7 +80,7 @@ def hack(ciphertype: str, ciphertext: str):
                     if c in LETTERS:
                         cleaned_word += c
 
-                if isEnglish(cleaned_word):
+                if cleaned_word and isEnglish(cleaned_word):
                     count += 1
 
             output.append((decrypted_text, ch, count))
@@ -125,7 +125,7 @@ def hack(ciphertype: str, ciphertext: str):
                         if i < len(c):
                             plaintext += c[i]
 
-                if isEnglish(plaintext):
+                if plaintext and isEnglish(plaintext):
                     return plaintext
 
     elif ciphertype == 'A':
