@@ -214,13 +214,3 @@ def test():
 
 if __name__ == '__main__':
     test()
-
-    start = time.perf_counter()
-    
-    processing()
-    
-    # Stop the stopwatch
-    end = time.perf_counter()
-    
-    print("Done! Check decrypted.txt for the results.")
-    print(f"Total processing runtime: {end - start:.5f} seconds")
