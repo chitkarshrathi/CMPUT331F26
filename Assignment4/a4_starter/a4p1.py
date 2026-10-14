@@ -39,9 +39,6 @@ Author: Chitkarsh Rathi
 from detectEnglish import isEnglish
 from itertools import permutations
 
-from typing import List
-
-import time
 
 def hack(ciphertype: str, ciphertext: str):
     """
@@ -91,7 +88,7 @@ def hack(ciphertype: str, ciphertext: str):
         output.sort(key=lambda x: (-x[2], x[0]))
         return output[0][0]
 
-    # Code referenced and used from a1p1.py and a2p3.py submission for CMPUT331 Assignment 2 by Chitkarsh Rathi on 9/28/2026. Some modiciations made to the code to fit the requirements of this assignment.
+    # Code referenced and used from a2p3.py submission for CMPUT331 Assignment 2 by Chitkarsh Rathi on 9/28/2026. Some modiciations made to the code to fit the requirements of this assignment.
     elif ciphertype == 'T':
         for col_length in range(1, 10):
             for key_tuple in permutations(range(1, col_length + 1)):
