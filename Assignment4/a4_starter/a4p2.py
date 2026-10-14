@@ -35,6 +35,9 @@ Nomenclator cipher
 Author: <<Insert your name here>>
 """
 
+import random
+
+
 LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 
 
@@ -46,7 +49,106 @@ def translateMessage(key: str, message: str, codebook: dict, mode: str):
     specifying the action to be taken. Returns a string containing the
     ciphertext (if encrypting) or plaintext (if decrypting).
     """
-    raise NotImplementedError()
+
+    cb_encrypt = {}
+    for k, v in codebook.items():
+        cb_encrypt[k.lower()] = v
+        
+    cb_decrypt = {}
+    for k, v in codebook.items():
+        for symbol in v:
+            cb_decrypt[symbol] = k
+
+    char_to_sub = {}
+    if mode == 'encrypt':
+        for i in range(len(LETTERS)):
+            char_to_sub[LETTERS[i]] = key[i]
+            char_to_sub[LETTERS[i].lower()] = key[i].lower()
+    else:
+        for i in range(len(LETTERS)):
+            char_to_sub[key[i]] = LETTERS[i]
+            char_to_sub[key[i].lower()] = LETTERS[i].lower()
+
+    parts = []
+    current_part = ''
+    for char in message:
+        if char.isspace():
+            if current_part and not current_part[-1].isspace():
+                parts.append(current_part)
+                current_part = ''
+            current_part += char
+        else:
+            if current_part and current_part[-1].isspace():
+                parts.append(current_part)
+                current_part = ''
+            current_part += char
+    if current_part:
+        parts.append(current_part)
+
+    translated = ''
+
+    for part in parts:
+        if part and part[0].isspace():
+            translated += part
+        else:
+            start_idx = 0
+            end_idx = len(part) - 1
+            
+            while start_idx <= end_idx:
+                c = part[start_idx]
+                if mode == 'encrypt':
+                    is_target = c.upper() in LETTERS
+                else:
+                    is_target = c.upper() in LETTERS or c.isdigit()
+                
+                if is_target:
+                    break
+                start_idx += 1
+                
+            while end_idx >= start_idx:
+                c = part[end_idx]
+                if mode == 'encrypt':
+                    is_target = c.upper() in LETTERS
+                else:
+                    is_target = c.upper() in LETTERS or c.isdigit()
+                    
+                if is_target:
+                    break
+                end_idx -= 1
+                
+            if start_idx > end_idx:
+                for c in part:
+                    if c in char_to_sub:
+                        translated += char_to_sub[c]
+                    else:
+                        translated += c
+            else:
+                prefix = part[:start_idx]
+                core = part[start_idx:end_idx + 1]
+                suffix = part[end_idx + 1:]
+                
+                if mode == 'encrypt':
+                    if core.lower() in cb_encrypt:
+                        symbol = random.choice(cb_encrypt[core.lower()])
+                        translated += prefix + symbol + suffix
+                    else:
+                        for c in part:
+                            if c in char_to_sub:
+                                translated += char_to_sub[c]
+                            else:
+                                translated += c
+                else:
+                    if core in cb_decrypt:
+                        original_word = cb_decrypt[core]
+                        translated += prefix + original_word + suffix
+                    else:
+                        for c in part:
+                            if c in char_to_sub:
+                                translated += char_to_sub[c]
+                            else:
+                                translated += c
+
+    return translated
 
 
 def encryptMessage(key: str, message: str, codebook: dict):
