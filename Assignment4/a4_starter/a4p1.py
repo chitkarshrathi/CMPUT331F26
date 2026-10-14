@@ -4,7 +4,7 @@
 #
 # CMPUT 331 Student Submission License
 # Version 1.0
-# Copyright <<Insert the date here>> <<Insert your name here>>
+# Copyright 2026 Chitkarsh Rathi
 #
 # Redistribution is forbidden in all circumstances. Use of this software
 # without explicit authorization from the author is prohibited.
@@ -33,13 +33,15 @@
 #-------------------- START ASSIGNMENT HERE ---------------------
 """
 General decryption program
-Author: <<Insert your name here>>
+Author: Chitkarsh Rathi
 """
 
 from detectEnglish import isEnglish
 from itertools import permutations
 
 from typing import List
+
+import time
 
 def hack(ciphertype: str, ciphertext: str):
     """
@@ -191,7 +193,7 @@ def processing():
 
                 if ciphertext.startswith(' '):
                     ciphertext = ciphertext[1:]
-                    
+
                 plaintext = hack(ciphertype, ciphertext)
                 
                 if plaintext:
@@ -212,3 +214,13 @@ def test():
 
 if __name__ == '__main__':
     test()
+
+    start = time.perf_counter()
+    
+    processing()
+    
+    # Stop the stopwatch
+    end = time.perf_counter()
+    
+    print("Done! Check decrypted.txt for the results.")
+    print(f"Total processing runtime: {end - start:.5f} seconds")
