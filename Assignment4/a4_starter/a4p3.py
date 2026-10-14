@@ -47,94 +47,72 @@ def hackSimpleSub(message: str):
     Then uses regular expressions and a dictionary to decipher additional letters.
     """
 
-    partial_hack = ssh.hackSimpleSub(message)
+    mapping = ssh.hackSimpleSub(message)
     
-    cipher_to_plain = {c: None for c in LETTERS}
-    plain_to_cipher = {c: None for c in LETTERS}
-    
-    for c, p in zip(message, partial_hack):
-        if c.upper() in LETTERS and p.upper() in LETTERS:
-            cipher_to_plain[c.upper()] = p.upper()
-            plain_to_cipher[p.upper()] = c.upper()
-            
-    dict_words = {}
     with open('dictionary.txt', 'r') as f:
-        for line in f:
-            w = line.strip().upper()
-            if w.isalpha():
-                if len(w) not in dict_words:
-                    dict_words[len(w)] = []
-                dict_words[len(w)].append(w)
-                
-
-    cipher_words = list(set(re.findall(r'[A-Za-z]+', message.upper())))
+        dict_words = [line.strip().upper() for line in f if line.strip().isalpha()]
+        
+    clean_msg = re.sub(r'[^A-Z\s]', '', message.upper())
+    cipher_words = list(set(clean_msg.split()))
     
     changed = True
     while changed:
         changed = False
         
-        for c_word in cipher_words:
-            if all(cipher_to_plain[c] is not None for c in c_word):
+        known_p = set(mapping[c][0] for c in LETTERS if len(mapping[c]) == 1)
+        
+        for c in LETTERS:
+            if len(mapping[c]) != 1:
+                if len(mapping[c]) == 0:
+                    mapping[c] = list(LETTERS)
+                
+                original_len = len(mapping[c])
+                mapping[c] = [p for p in mapping[c] if p not in known_p]
+                
+                if len(mapping[c]) == 1 and original_len != 1:
+                    changed = True
+                    
+        mapping = ssh.removeSolvedLettersFromMapping(mapping)
+        known_p = set(mapping[c][0] for c in LETTERS if len(mapping[c]) == 1)
+        unknown_regex = '[^' + ''.join(known_p) + ']' if known_p else '.'
+
+        for cw in cipher_words:
+            if all(len(mapping[c]) == 1 for c in cw):
                 continue
                 
-            candidates = []
-            for w in dict_words.get(len(c_word), []):
-                valid = True
-                temp_c_to_p = {}
-                temp_p_to_c = {}
-                
-                for i in range(len(c_word)):
-                    c = c_word[i]
-                    p = w[i]
-                    
-                    if cipher_to_plain[c] is not None and cipher_to_plain[c] != p:
-                        valid = False
-                        break
-                    if plain_to_cipher[p] is not None and plain_to_cipher[p] != c:
-                        valid = False
-                        break
-                        
-                    if c in temp_c_to_p and temp_c_to_p[c] != p:
-                        valid = False
-                        break
-                    if p in temp_p_to_c and temp_p_to_c[p] != c:
-                        valid = False
-                        break
-                        
-                    temp_c_to_p[c] = p
-                    temp_p_to_c[p] = c
-                    
-                if valid:
-                    candidates.append(w)
-                    
+            pattern_str = '^'
+            for c in cw:
+                if len(mapping[c]) == 1:
+                    pattern_str += mapping[c][0]
+                elif len(mapping[c]) > 1:
+                    pattern_str += '[' + ''.join(mapping[c]) + ']'
+                else:
+                    pattern_str += unknown_regex
+            pattern_str += '$'
+            
+            pattern = re.compile(pattern_str)
+            candidates = [w for w in dict_words if pattern.match(w)]
+            
             if candidates:
-                unmapped_chars = set(c for c in c_word if cipher_to_plain[c] is None)
-                for c in unmapped_chars:
-                    idx = c_word.index(c)
+                unresolved_chars = set(c for c in cw if len(mapping[c]) != 1)
+                for c in unresolved_chars:
+                    indices = [i for i, char in enumerate(cw) if char == c]
                     
-                    possible_p = set(cand[idx] for cand in candidates)
-                    
-                    if len(possible_p) == 1:
-                        p = possible_p.pop()
-                        cipher_to_plain[c] = p
-                        plain_to_cipher[p] = c
+                    possible_p_for_c = set()
+                    for cand in candidates:
+                        p_chars = set(cand[i] for i in indices)
+                        if len(p_chars) == 1:
+                            possible_p_for_c.add(cand[indices[0]])
+                            
+                    if len(possible_p_for_c) == 1:
+                        solved_p = possible_p_for_c.pop()
+                        mapping[c] = [solved_p]
                         changed = True
                         
-    final_message = ''
-    for char in message:
-        if char.upper() in LETTERS:
-            p = cipher_to_plain[char.upper()]
-            if p is None:
-                final_message += char 
-            else:
-                if char.isupper():
-                    final_message += p
-                else:
-                    final_message += p.lower()
-        else:
-            final_message += char
-            
-    return final_message
+        if changed:
+            mapping = ssh.removeSolvedLettersFromMapping(mapping)
+
+    return ssh.decryptWithCipherletterMapping(message, mapping)
 
 
 def test():
