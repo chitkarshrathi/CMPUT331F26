@@ -53,7 +53,30 @@ def evalDecipherment(text1: str, text2: str) -> [float, float]:
     This function should compare the two files and return a list containing two fields that
     correspond to the key accuracy and decipherment accuracy of text2 w.r.t. the plaintext, text1
     """
-    raise NotImplementedError()
+
+    matching_c = 0
+    total_c = 0
+
+    all_c = set()
+    correct_c = set()
+
+    for c1, c2 in zip(text1, text2):
+        if c1.isalpha():
+            c1_lower = c1.lower()
+            c2_lower = c2.lower()
+
+            total_c += 1
+            if c1_lower == c2_lower:
+                matching_c += 1
+
+            all_c.add(c1_lower)
+            if c1_lower == c2_lower:
+                correct_c.add(c1_lower)
+
+    key_accuracy = len(correct_c) / len(all_c) if all_c else 0
+    decipherment_accuracy = matching_c / total_c if total_c else 0
+
+    return [key_accuracy, decipherment_accuracy]
 
 
 def test():
