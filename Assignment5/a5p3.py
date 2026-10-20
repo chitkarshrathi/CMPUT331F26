@@ -38,7 +38,23 @@ import a5p1, a5p2
 from sys import flags
 
 def checkLetterFrequency(ciphertext: str) -> dict:
-    raise NotImplementedError
+
+    counts = {}
+    total_letters = 0
+
+    for c in ciphertext:
+        if c.isalpha():
+            upper_c = c.upper()
+            counts[upper_c] = counts.get(upper_c, 0) + 1
+            total_letters += 1
+
+    frequencies = {}
+
+    if total_letters > 0:
+        for letter, count in counts.items():
+            frequencies[letter] = count / total_letters
+
+    return frequencies
 
 
 def test():
