@@ -4,7 +4,7 @@
 #
 # CMPUT 331 Student Submission License
 # Version 1.0
-# Copyright <<Insert the date here>> <<Insert your name here>>
+# Copyright 2026 Chitkarsh Rathi
 #
 # Redistribution is forbidden in all circumstances. Use of this software
 # without explicit authorization from the author is prohibited.
@@ -32,7 +32,7 @@
 
 """
 CMPUT 331 Assignment 5 Problem 3 Student Solution
-Author: <Your name here>
+Author: Chitkarsh Rathi
 """
 import a5p1, a5p2
 from sys import flags
