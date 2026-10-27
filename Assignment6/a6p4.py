@@ -127,7 +127,6 @@ def test():
             
         print("-" * 40)
         
-        # Final submission run
         breakSub("text_cipher.txt", "wells.txt")
         print("Final submission cipher decrypted and saved.")
         
