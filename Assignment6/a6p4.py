@@ -4,7 +4,7 @@
 #
 # CMPUT 331 Student Submission License
 # Version 1.0
-# Copyright 2026 <<Insert your name here>>
+# Copyright 2026 Chitkarsh Rathi
 #
 # Redistribution is forbidden in all circumstances. Use of this software
 # without explicit authorization from the author is prohibited.
@@ -35,6 +35,7 @@ Problem 4
 """
 
 from sys import flags
+import a6p1, a6p2, a6p3
 
 
 ETAOIN = "ETAOINSHRDLCUMWFGYPBVKJXQZ"   # This is the true English letter frequency
@@ -57,10 +58,46 @@ def breakSub(cipherFile: str, textFile: str) -> None:
     """
     n = 2  # Use bigrams as required by the assignment
 
-    raise NotImplementedError()
+    with open(cipherFile, 'r') as f:
+        ciphertext = f.read()
 
+    with open(textFile, 'r') as f:
+        reference_text = f.read()
 
+    frequencies = a6p1.ngramsFreqs(reference_text, n)
 
+    counts = {chr(i): 0 for i in range(65, 91)}
+
+    for char in ciphertext:
+        if char in counts:
+            counts[char] += 1
+
+    sorted_letters = sorted(counts.keys(), key=lambda x: (-counts[x], x))
+
+    mapping = {' ' : ' '}
+
+    for i, j in enumerate(sorted_letters):
+        mapping[j] = ETAOIN[i]
+
+    current_mapping = mapping
+
+    while True:
+        new_mapping = a6p3.bestSuccessor(current_mapping, ciphertext, frequencies, n)
+
+        if new_mapping == current_mapping:
+            break
+
+        current_mapping = new_mapping
+
+    decrypted_chars = []
+
+    for char in ciphertext:
+        decrypted_chars.append(current_mapping.get(char, char))
+
+    decrypted_text = ''.join(decrypted_chars)
+
+    with open('text_plain.txt', 'w') as f:
+        f.write(decrypted_text)
 
 
 '''
@@ -73,6 +110,29 @@ def test():
     "Run tests"
     # TODO: test thoroughly by writing your own regression tests
     # This function is ignored in our marking
+
+    print("Testing Finnegan cipher...")
+    try:
+        breakSub("text_finnegan_cipher.txt", "wells.txt")
+        print("Finnegan cipher decrypted.")
+        
+        with open('text_plain.txt', 'r') as f1, open('text_finnegan_plain.txt', 'r') as f2:
+            my_output = f1.read()
+            expected_output = f2.read()
+            
+        if my_output == expected_output:
+            print("SUCCESS: Deciphered text matches the reference file.")
+        else:
+            print("FAILURE: Deciphered text does not match the reference file.")
+            
+        print("-" * 40)
+        
+        # Final submission run
+        breakSub("text_cipher.txt", "wells.txt")
+        print("Final submission cipher decrypted and saved.")
+        
+    except FileNotFoundError as e:
+        print(f"Test skipped: A required file was not found - {e}")
     
 if __name__ == "__main__" and not flags.interactive:
     test()
