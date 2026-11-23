@@ -1,2 +1,2 @@
-Language: ____
-Reason: ____
+Language: English (en)
+Reason: The SSD confusion matrix shows that English was misclassified 4/5 times. It was confused Italian twice, and once with each Bulgarian and Spanish. English was only correctly identified once according to the confusion matrix and no other language had this many errors. 
